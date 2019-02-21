@@ -57,14 +57,19 @@ class PhoneNumberField(models.Field):
     def get_prep_value(self, value):
         """
         Perform preliminary non-db specific value checks and conversions.
+
+        Args:
+            value: A PhoneNumber instance, or the field's representation
+                of empty value (None or "")
         """
-        value = super(PhoneNumberField, self).get_prep_value(value)
-        value = to_python(value)
-        if not isinstance(value, PhoneNumber):
-            return value
-        format_string = getattr(settings, "PHONENUMBER_DB_FORMAT", "E164")
-        fmt = PhoneNumber.format_map[format_string]
-        return value.format_as(fmt)
+        if isinstance(value, PhoneNumber):
+            if value.is_valid():
+                format_string = getattr(settings, "PHONENUMBER_DB_FORMAT", "E164")
+                fmt = PhoneNumber.format_map[format_string]
+                value = value.format_as(fmt)
+            else:
+                value = self.get_default()
+        return super(PhoneNumberField, self).get_prep_value(value)
 
     def contribute_to_class(self, cls, name, *args, **kwargs):
         super(PhoneNumberField, self).contribute_to_class(cls, name, *args, **kwargs)
