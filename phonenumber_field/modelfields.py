@@ -71,12 +71,10 @@ class PhoneNumberField(models.Field):
     def get_prep_value(self, value):
         """
         Perform preliminary non-db specific value checks and conversions.
-
-        Args:
-            value: A PhoneNumber instance, or the field's representation
-                of empty value (None or "")
         """
-        if isinstance(value, PhoneNumber):
+        if value:
+            if not isinstance(value, PhoneNumber):
+                value = to_python(value, self.region)
             if value.is_valid():
                 format_string = getattr(settings, "PHONENUMBER_DB_FORMAT", "E164")
                 fmt = PhoneNumber.format_map[format_string]

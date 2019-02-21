@@ -24,6 +24,10 @@ def phone_transform(obj):
     return (obj.pk, obj.name, obj.phone)
 
 
+def phone_transform(obj):
+    return (obj.pk, obj.name, obj.phone)
+
+
 class PhonenumerFieldAppTest(TestCase):
     def test_save_field_to_database(self):
         """Basic Field Test"""
@@ -51,9 +55,45 @@ class PhonenumerFieldAppTest(TestCase):
                 .filter(pk=pk)
                 .count())
 
+    def test_create_invalid_number(self):
+        from .models import TestModel
+
+        tm = TestModel.objects.create(phone="invalid")
+        self.assertQuerysetEqual(
+            TestModel.objects.all(), [(tm.pk, "", "")], transform=phone_transform
+        )
+
     def test_save_invalid_number(self):
         from .models import TestModel
-        tm = TestModel.objects.create(phone="invalid")
+
+        tm = TestModel.objects.create(phone="+1 604-333-4444")
+
+        tm.phone = "invalid"
+        tm.save()
+
+        self.assertQuerysetEqual(
+            TestModel.objects.all(), [(tm.pk, "", "")], transform=phone_transform
+        )
+
+    def test_save_update_field_invalid_number(self):
+        from .models import TestModel
+
+        tm = TestModel.objects.create(phone="+1 604-333-4444")
+
+        tm.phone = "invalid"
+        tm.save(update_fields=["phone"])
+
+        self.assertQuerysetEqual(
+            TestModel.objects.all(), [(tm.pk, "", "")], transform=phone_transform
+        )
+
+    def test_update_to_invalid_number(self):
+        from .models import TestModel
+
+        tm = TestModel.objects.create(phone="+1 604-333-4444")
+
+        TestModel.objects.update(phone="invalid")
+
         self.assertQuerysetEqual(
             TestModel.objects.all(), [(tm.pk, "", "")], transform=phone_transform,
         )
