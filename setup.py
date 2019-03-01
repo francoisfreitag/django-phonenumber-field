@@ -4,12 +4,12 @@ from setuptools import find_packages, setup
 
 
 setup(
-    name="django-phonenumber-field",
+    name="erezlife-phonenumber-field",
     version=__version__,
-    url='https://github.com/stefanfoulis/django-phonenumber-field',
+    url='https://github.com/erezlife/django-phonenumber-field',
     license='BSD',
     platforms=['OS Independent'],
-    description="An international phone number field for django models.",
+    description="eRezLife fork of https://github.com/stefanfoulis/django-phonenumber-field",
     install_requires=[
         'Django>=1.11.3',
         'babel',
@@ -21,8 +21,6 @@ setup(
     long_description=open('README.rst').read(),
     author='Stefan Foulis',
     author_email='stefan@foulis.ch',
-    maintainer='Stefan Foulis',
-    maintainer_email='stefan@foulis.ch',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
