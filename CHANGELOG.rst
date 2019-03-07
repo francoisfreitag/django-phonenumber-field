@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+2.3.0 (2019-03-07)
+------------------
+
 * Added the ``region`` keyword argument to ``PhoneNumberField``.
 * Fix representation of invalid phone numbers in the database, previously
   stored as ``+NoneNone``. Now, invalid phone numbers are represented as:
